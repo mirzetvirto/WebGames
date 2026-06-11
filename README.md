@@ -34,6 +34,19 @@ Esta aplicación ahora incluye versiones web jugables de los tres juegos, ademá
 
 > Importante: este proyecto solo despliega el launcher web. Los juegos en `tetris.py`, `juego_invaders.py` y `juego_nuevo.py` se ejecutan como aplicaciones de escritorio en el servidor.
 
+## Despliegue gratis con GitHub Pages
+
+Este repositorio ahora incluye una versión estática de los juegos para GitHub Pages en la carpeta `docs/`.
+
+1. Sube los cambios al repositorio.
+2. En GitHub, ve a la configuración del repositorio.
+3. En la sección **Pages**, elige `main` como rama y `/docs` como carpeta.
+4. Guarda la configuración.
+
+La web estática se publicará en una URL del tipo `https://<usuario>.github.io/<repositorio>/`.
+
+> Nota: GitHub Pages solo sirve la versión web de los juegos (los archivos `docs/index.html`, `docs/play.html` y `docs/js/*.js`). La opción de lanzar los juegos de Pygame localmente sigue estando disponible solo en la versión local con `app.py`.
+
 ## Juegos web
 
 La app ahora sirve versiones web de los juegos directamente en el navegador desde `http://127.0.0.1:5000`.
