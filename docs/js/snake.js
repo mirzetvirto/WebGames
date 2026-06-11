@@ -6,8 +6,15 @@ const ROWS = 30;
 canvas.width = COLS * CELL;
 canvas.height = ROWS * CELL;
 
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let audioContext = null;
 let snakeMusicStarted = false;
+
+function getAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioContext;
+}
 
 const snakeTheme = [
     { freq: 440.00, dur: 0.3 }, // A4
@@ -28,12 +35,13 @@ const snakeTheme = [
 ];
 
 function playSnakeTone(frequency, startTime, duration) {
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+    const ctx = getAudioContext();
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
     oscillator.type = 'square';
     oscillator.frequency.value = frequency;
     oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+    gainNode.connect(ctx.destination);
     gainNode.gain.setValueAtTime(0.0001, startTime);
     gainNode.gain.exponentialRampToValueAtTime(0.2, startTime + 0.02);
     gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
@@ -43,7 +51,8 @@ function playSnakeTone(frequency, startTime, duration) {
 
 function scheduleSnakeTheme() {
     if (!snakeMusicStarted) return;
-    const startTime = audioContext.currentTime + 0.1;
+    const ctx = getAudioContext();
+    const startTime = ctx.currentTime + 0.1;
     let time = startTime;
     snakeTheme.forEach(note => {
         playSnakeTone(note.freq, time, note.dur);
@@ -56,9 +65,10 @@ function scheduleSnakeTheme() {
 }
 
 function activateSnakeMusic() {
+    const ctx = getAudioContext();
     if (snakeMusicStarted) return;
-    if (audioContext.state === 'suspended') {
-        audioContext.resume()
+    if (ctx.state === 'suspended') {
+        ctx.resume()
             .then(() => {
                 snakeMusicStarted = true;
                 scheduleSnakeTheme();
@@ -75,6 +85,7 @@ function activateSnakeMusic() {
 activateSnakeMusic();
 window.addEventListener('keydown', activateSnakeMusic, { once: true });
 window.addEventListener('click', activateSnakeMusic, { once: true });
+window.addEventListener('pointerdown', activateSnakeMusic, { once: true });
 
 let snake = [{ x: 15, y: 15 }, { x: 14, y: 15 }, { x: 13, y: 15 }];
 let direction = { x: 1, y: 0 };
