@@ -6,6 +6,75 @@ const ROWS = 30;
 canvas.width = COLS * CELL;
 canvas.height = ROWS * CELL;
 
+const audioButton = document.getElementById('audioButton');
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let snakeMusicStarted = false;
+
+const snakeTheme = [
+    { freq: 440.00, dur: 0.3 }, // A4
+    { freq: 523.25, dur: 0.3 }, // C5
+    { freq: 587.33, dur: 0.3 }, // D5
+    { freq: 659.25, dur: 0.3 }, // E5
+    { freq: 587.33, dur: 0.3 },
+    { freq: 523.25, dur: 0.3 },
+    { freq: 440.00, dur: 0.3 },
+    { freq: 392.00, dur: 0.3 }, // G4
+    { freq: 440.00, dur: 0.3 },
+    { freq: 523.25, dur: 0.3 },
+    { freq: 587.33, dur: 0.3 },
+    { freq: 523.25, dur: 0.3 },
+    { freq: 440.00, dur: 0.3 },
+    { freq: 392.00, dur: 0.3 },
+    { freq: 349.23, dur: 0.6 }, // F4
+];
+
+function playSnakeTone(frequency, startTime, duration) {
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    oscillator.type = 'square';
+    oscillator.frequency.value = frequency;
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    gainNode.gain.setValueAtTime(0.0001, startTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.2, startTime + 0.02);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+    oscillator.start(startTime);
+    oscillator.stop(startTime + duration + 0.05);
+}
+
+function scheduleSnakeTheme() {
+    if (!snakeMusicStarted) return;
+    const startTime = audioContext.currentTime + 0.1;
+    let time = startTime;
+    snakeTheme.forEach(note => {
+        playSnakeTone(note.freq, time, note.dur);
+        time += note.dur;
+    });
+    const loopDuration = time - startTime;
+    setTimeout(() => {
+        if (snakeMusicStarted) scheduleSnakeTheme();
+    }, loopDuration * 1000 - 50);
+}
+
+function activateSnakeMusic() {
+    if (snakeMusicStarted) return;
+    snakeMusicStarted = true;
+    if (audioContext.state === 'suspended') {
+        audioContext.resume().then(scheduleSnakeTheme);
+    } else {
+        scheduleSnakeTheme();
+    }
+    if (audioButton) {
+        audioButton.style.display = 'none';
+    }
+}
+
+if (audioButton) {
+    audioButton.addEventListener('click', activateSnakeMusic);
+}
+window.addEventListener('keydown', activateSnakeMusic, { once: true });
+window.addEventListener('click', activateSnakeMusic, { once: true });
+
 let snake = [{ x: 15, y: 15 }, { x: 14, y: 15 }, { x: 13, y: 15 }];
 let direction = { x: 1, y: 0 };
 let nextDirection = { x: 1, y: 0 };
