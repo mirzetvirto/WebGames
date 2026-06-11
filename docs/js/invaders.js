@@ -25,15 +25,27 @@ const keys = {};
 const backgroundMusic = new Audio('audio/musica_aliens1.mp3');
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.4;
+backgroundMusic.load();
+
+const audioButton = document.getElementById('audioButton');
+
+const tryPlayMusic = () => {
+    backgroundMusic.play().then(() => {
+        if (audioButton) {
+            audioButton.style.display = 'none';
+        }
+    }).catch(() => {
+        // still blocked until a real user gesture occurs
+    });
+};
+
 backgroundMusic.play().catch(() => {
-    // Autoplay may be blocked. Play on first interaction.
-    const tryPlay = () => {
-        backgroundMusic.play().catch(() => {});
-        window.removeEventListener('keydown', tryPlay);
-        window.removeEventListener('click', tryPlay);
-    };
-    window.addEventListener('keydown', tryPlay);
-    window.addEventListener('click', tryPlay);
+    if (audioButton) {
+        audioButton.style.display = 'inline-block';
+        audioButton.addEventListener('click', tryPlayMusic);
+    }
+    window.addEventListener('keydown', tryPlayMusic);
+    window.addEventListener('click', tryPlayMusic);
 });
 
 function setupAliens() {
