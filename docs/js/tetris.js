@@ -77,12 +77,17 @@ function scheduleThemeLoop() {
 
 function activateMusic() {
     if (musicStarted) return;
-    musicStarted = true;
     if (audioContext.state === 'suspended') {
-        audioContext.resume().then(() => {
-            scheduleThemeLoop();
-        });
+        audioContext.resume()
+            .then(() => {
+                musicStarted = true;
+                scheduleThemeLoop();
+            })
+            .catch(() => {
+                musicStarted = false;
+            });
     } else {
+        musicStarted = true;
         scheduleThemeLoop();
     }
 }

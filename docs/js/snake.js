@@ -57,10 +57,17 @@ function scheduleSnakeTheme() {
 
 function activateSnakeMusic() {
     if (snakeMusicStarted) return;
-    snakeMusicStarted = true;
     if (audioContext.state === 'suspended') {
-        audioContext.resume().then(scheduleSnakeTheme);
+        audioContext.resume()
+            .then(() => {
+                snakeMusicStarted = true;
+                scheduleSnakeTheme();
+            })
+            .catch(() => {
+                snakeMusicStarted = false;
+            });
     } else {
+        snakeMusicStarted = true;
         scheduleSnakeTheme();
     }
 }
