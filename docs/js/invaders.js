@@ -110,7 +110,7 @@ function draw() {
     ctx.font = '18px Arial';
     ctx.fillText(`Puntos: ${score}`, 16, 28);
     ctx.fillText(`Vidas: ${player.lives}`, 16, 52);
-    ctx.fillText('Flechas: mover, Espaço: disparar', 16, 76);
+    ctx.fillText('Flechas: mover, Espacio: disparar', 16, 76);
 
     if (gameOver) {
         ctx.fillStyle = '#ff5555';
