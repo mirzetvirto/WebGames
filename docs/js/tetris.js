@@ -9,29 +9,93 @@ canvas.width = WIDTH;
 canvas.height = HEIGHT;
 
 const audioButton = document.getElementById('audioButton');
-const backgroundMusic = new Audio('audio/musica_aliens1.mp3');
-backgroundMusic.loop = true;
-backgroundMusic.volume = 0.4;
-backgroundMusic.load();
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let musicStarted = false;
 
-const tryPlayMusic = () => {
-    backgroundMusic.play().then(() => {
-        if (audioButton) {
-            audioButton.style.display = 'none';
-        }
-    }).catch(() => {
-        // autoplay blocked until a user gesture occurs
+const tetrisTheme = [
+    { freq: 659.25, dur: 0.25 }, // E5
+    { freq: 523.25, dur: 0.25 }, // C5
+    { freq: 587.33, dur: 0.25 }, // D5
+    { freq: 659.25, dur: 0.25 },
+    { freq: 587.33, dur: 0.25 },
+    { freq: 523.25, dur: 0.25 },
+    { freq: 493.88, dur: 0.25 }, // B4
+    { freq: 523.25, dur: 0.25 },
+    { freq: 587.33, dur: 0.25 },
+    { freq: 659.25, dur: 0.25 },
+    { freq: 659.25, dur: 0.25 },
+    { freq: 659.25, dur: 0.5 },
+    { freq: 587.33, dur: 0.25 },
+    { freq: 587.33, dur: 0.25 },
+    { freq: 587.33, dur: 0.5 },
+    { freq: 659.25, dur: 0.25 },
+    { freq: 783.99, dur: 0.25 }, // G5
+    { freq: 880.00, dur: 0.5 }, // A5
+    { freq: 698.46, dur: 0.25 }, // F5
+    { freq: 698.46, dur: 0.25 },
+    { freq: 698.46, dur: 0.5 },
+    { freq: 659.25, dur: 0.25 },
+    { freq: 523.25, dur: 0.25 },
+    { freq: 587.33, dur: 0.25 },
+    { freq: 659.25, dur: 0.25 },
+    { freq: 587.33, dur: 0.25 },
+    { freq: 523.25, dur: 0.25 },
+    { freq: 493.88, dur: 0.25 },
+    { freq: 523.25, dur: 0.25 },
+    { freq: 587.33, dur: 0.25 },
+    { freq: 659.25, dur: 0.25 },
+    { freq: 659.25, dur: 0.25 },
+    { freq: 659.25, dur: 0.5 }
+];
+
+function playTone(frequency, startTime, duration) {
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    oscillator.type = 'square';
+    oscillator.frequency.value = frequency;
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    gainNode.gain.setValueAtTime(0.0001, startTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.2, startTime + 0.01);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+    oscillator.start(startTime);
+    oscillator.stop(startTime + duration + 0.05);
+}
+
+function scheduleThemeLoop() {
+    if (!musicStarted) return;
+    const startTime = audioContext.currentTime + 0.1;
+    let time = startTime;
+    tetrisTheme.forEach(note => {
+        playTone(note.freq, time, note.dur);
+        time += note.dur;
     });
-};
+    const loopDuration = time - startTime;
+    setTimeout(() => {
+        if (musicStarted) scheduleThemeLoop();
+    }, loopDuration * 1000 - 50);
+}
 
-backgroundMusic.play().catch(() => {
-    if (audioButton) {
-        audioButton.style.display = 'inline-block';
-        audioButton.addEventListener('click', tryPlayMusic);
+function activateMusic() {
+    if (musicStarted) return;
+    musicStarted = true;
+    if (audioContext.state === 'suspended') {
+        audioContext.resume().then(() => {
+            scheduleThemeLoop();
+        });
+    } else {
+        scheduleThemeLoop();
     }
-    window.addEventListener('keydown', tryPlayMusic);
-    window.addEventListener('click', tryPlayMusic);
-});
+    if (audioButton) {
+        audioButton.style.display = 'none';
+    }
+}
+
+if (audioButton) {
+    audioButton.addEventListener('click', activateMusic);
+}
+window.addEventListener('keydown', activateMusic, { once: true });
+window.addEventListener('click', activateMusic, { once: true });
 
 const COLORS = [
     '#000', '#2cefff', '#0000ff', '#ff9f00', '#ffff00', '#00ff00', '#8a2be2', '#ff0000', '#ffaa00'
