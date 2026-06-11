@@ -22,6 +22,20 @@ let gameOver = false;
 let lastTime = 0;
 const keys = {};
 
+const backgroundMusic = new Audio('audio/musica_aliens1.mp3');
+backgroundMusic.loop = true;
+backgroundMusic.volume = 0.4;
+backgroundMusic.play().catch(() => {
+    // Autoplay may be blocked. Play on first interaction.
+    const tryPlay = () => {
+        backgroundMusic.play().catch(() => {});
+        window.removeEventListener('keydown', tryPlay);
+        window.removeEventListener('click', tryPlay);
+    };
+    window.addEventListener('keydown', tryPlay);
+    window.addEventListener('click', tryPlay);
+});
+
 function setupAliens() {
     aliens.length = 0;
     const offsetX = 60;
