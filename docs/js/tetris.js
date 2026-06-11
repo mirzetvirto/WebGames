@@ -8,6 +8,31 @@ const HEIGHT = ROWS * CELL;
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
 
+const audioButton = document.getElementById('audioButton');
+const backgroundMusic = new Audio('audio/musica_aliens1.mp3');
+backgroundMusic.loop = true;
+backgroundMusic.volume = 0.4;
+backgroundMusic.load();
+
+const tryPlayMusic = () => {
+    backgroundMusic.play().then(() => {
+        if (audioButton) {
+            audioButton.style.display = 'none';
+        }
+    }).catch(() => {
+        // autoplay blocked until a user gesture occurs
+    });
+};
+
+backgroundMusic.play().catch(() => {
+    if (audioButton) {
+        audioButton.style.display = 'inline-block';
+        audioButton.addEventListener('click', tryPlayMusic);
+    }
+    window.addEventListener('keydown', tryPlayMusic);
+    window.addEventListener('click', tryPlayMusic);
+});
+
 const COLORS = [
     '#000', '#2cefff', '#0000ff', '#ff9f00', '#ffff00', '#00ff00', '#8a2be2', '#ff0000', '#ffaa00'
 ];
