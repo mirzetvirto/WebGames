@@ -8,7 +8,6 @@ const HEIGHT = ROWS * CELL;
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
 
-const audioButton = document.getElementById('audioButton');
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 let musicStarted = false;
 
@@ -86,14 +85,9 @@ function activateMusic() {
     } else {
         scheduleThemeLoop();
     }
-    if (audioButton) {
-        audioButton.style.display = 'none';
-    }
 }
 
-if (audioButton) {
-    audioButton.addEventListener('click', activateMusic);
-}
+activateMusic();
 window.addEventListener('keydown', activateMusic, { once: true });
 window.addEventListener('click', activateMusic, { once: true });
 

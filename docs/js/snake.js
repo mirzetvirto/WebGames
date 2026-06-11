@@ -6,7 +6,6 @@ const ROWS = 30;
 canvas.width = COLS * CELL;
 canvas.height = ROWS * CELL;
 
-const audioButton = document.getElementById('audioButton');
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 let snakeMusicStarted = false;
 
@@ -64,14 +63,9 @@ function activateSnakeMusic() {
     } else {
         scheduleSnakeTheme();
     }
-    if (audioButton) {
-        audioButton.style.display = 'none';
-    }
 }
 
-if (audioButton) {
-    audioButton.addEventListener('click', activateSnakeMusic);
-}
+activateSnakeMusic();
 window.addEventListener('keydown', activateSnakeMusic, { once: true });
 window.addEventListener('click', activateSnakeMusic, { once: true });
 

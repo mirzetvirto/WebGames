@@ -27,26 +27,15 @@ backgroundMusic.loop = true;
 backgroundMusic.volume = 0.4;
 backgroundMusic.load();
 
-const audioButton = document.getElementById('audioButton');
-
 const tryPlayMusic = () => {
-    backgroundMusic.play().then(() => {
-        if (audioButton) {
-            audioButton.style.display = 'none';
-        }
-    }).catch(() => {
-        // still blocked until a real user gesture occurs
+    backgroundMusic.play().catch(() => {
+        // autoplay blocked until a user gesture occurs
     });
 };
 
-backgroundMusic.play().catch(() => {
-    if (audioButton) {
-        audioButton.style.display = 'inline-block';
-        audioButton.addEventListener('click', tryPlayMusic);
-    }
-    window.addEventListener('keydown', tryPlayMusic);
-    window.addEventListener('click', tryPlayMusic);
-});
+tryPlayMusic();
+window.addEventListener('keydown', tryPlayMusic, { once: true });
+window.addEventListener('click', tryPlayMusic, { once: true });
 
 function setupAliens() {
     aliens.length = 0;
