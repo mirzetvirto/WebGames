@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Juegos Python - Web Launcher</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #111; color: #eee; margin: 0; padding: 0; }
+        .container { max-width: 760px; margin: 0 auto; padding: 24px; }
+        h1 { margin-bottom: 8px; }
+        .game-card { background: #1f1f1f; border: 1px solid #333; border-radius: 12px; padding: 18px; margin-bottom: 16px; }
+        .game-card h2 { margin: 0 0 8px; }
+        .game-card p { margin: 0 0 12px; color: #bbb; }
+        .launch-button { display: inline-block; padding: 10px 18px; background: #2979ff; color: #fff; border-radius: 8px; text-decoration: none; }
+        .launch-button:hover { background: #1565c0; }
+        .note { font-size: 0.95rem; color: #aaa; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Juegos Python - Por Mirzet Virto</h1>
+        <p>Haz clic en un juego para lanzarlo en una ventana de Pygame local o jugar directamente en el navegador.</p>
+
+        {% for key, game in games.items() %}
+        <div class="game-card">
+            <h2>{{ game.title }}</h2>
+            <p>{{ game.description }}</p>
+            <a class="launch-button" href="{{ url_for('play', game_key=key) }}">Jugar en el navegador</a>
+            <a class="launch-button" href="{{ url_for('launch', game_key=key) }}" style="margin-left: 12px; background: #555;">Lanzar local</a>
+        </div>
+        {% endfor %}
+
+        <div class="note">
+            Nota: el botón "Jugar en el navegador" abre la versión web del juego. El botón "Lanzar local" ejecuta el juego original de Pygame en el servidor local.
+        </div>
+    </div>
+</body>
+</html>

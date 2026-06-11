@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ game.title }} - Juegos Python - Por Mirzet Virto</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #10101a; color: #eee; }
+        .container { max-width: 980px; margin: 0 auto; padding: 24px; }
+        h1 { margin-bottom: 8px; }
+        .info { margin-bottom: 16px; color: #ccc; }
+        .toolbar { margin-bottom: 18px; }
+        .toolbar a { color: #76c7ff; text-decoration: none; padding: 10px 16px; border: 1px solid #2d6cd2; border-radius: 8px; background: #17203c; }
+        .toolbar a:hover { background: #243c75; }
+        canvas { display: block; margin: 0 auto; border: 2px solid #333; border-radius: 12px; background: #000; }
+        .hint { margin-top: 12px; font-size: 0.96rem; color: #aaa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <a href="{{ url_for('index') }}">← Volver al menú</a>
+        </div>
+        <h1>{{ game.title }}</h1>
+        <p class="info">{{ game.description }}</p>
+        <canvas id="gameCanvas"></canvas>
+        <p class="hint">{{ game.instructions }}</p>
+    </div>
+    <script>const GAME_KEY = '{{ game_key }}';</script>
+    <script src="{{ url_for('static', filename='js/' + game_key + '.js') }}"></script>
+</body>
+</html>

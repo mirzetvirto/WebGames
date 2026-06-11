@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lanzamiento local</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #111; color: #eee; margin: 0; padding: 0; }
+        .container { max-width: 760px; margin: 0 auto; padding: 24px; }
+        .message { background: #1f1f1f; border: 1px solid #333; border-radius: 12px; padding: 18px; }
+        a { color: #76c7ff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message">
+            {% if success %}
+                <h1>Juego lanzado</h1>
+                <p>El juego se ha iniciado localmente en la máquina que ejecuta el servidor.</p>
+            {% else %}
+                <h1>Error al lanzar el juego</h1>
+                <p>No se pudo iniciar el juego solicitado. Asegúrate de que el archivo existe y de que el servidor puede ejecutarlo.</p>
+            {% endif %}
+            <p><a href="{{ url_for('index') }}">Volver al menú principal</a></p>
+        </div>
+    </div>
+</body>
+</html>
