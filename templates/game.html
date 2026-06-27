@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ game.title }} - Juegos Python - Por Mirzet Virto</title>
+    <title>{{ game.title }} - Juegos Python </title>
     <style>
         body { margin: 0; font-family: Arial, sans-serif; background: #10101a; color: #eee; }
         .container { max-width: 980px; margin: 0 auto; padding: 24px; }
@@ -27,6 +27,6 @@
         <p class="hint">{{ game.instructions }}</p>
     </div>
     <script>const GAME_KEY = '{{ game_key }}';</script>
-    <script src="{{ url_for('static', filename='js/' + game_key + '.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/' + game_key + '.js') }}?v=2"></script>
 </body>
 </html>

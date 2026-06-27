@@ -40,7 +40,7 @@ function loadGame(gameKey) {
     document.getElementById('gameDescription').textContent = game.description;
 
     const script = document.createElement('script');
-    script.src = `js/${gameKey}.js`;
+    script.src = `js/${gameKey}.js?v=2`;
     script.onload = () => {
         console.log(`${gameKey} cargado correctamente.`);
     };

@@ -7,6 +7,7 @@ const PLAYER_WIDTH = 50;
 const PLAYER_HEIGHT = 18;
 const PLAYER_SPEED = 6;
 const BULLET_SPEED = 7;
+const SHOT_COOLDOWN = 180;
 const ALIEN_SIZE = 40;
 const ALIEN_ROWS = 4;
 const ALIEN_COLS = 8;
@@ -20,6 +21,8 @@ let alienSpeed = 0.8;
 let score = 0;
 let gameOver = false;
 let lastTime = 0;
+let lastShotTime = 0;
+let spaceHeld = false;
 const keys = {};
 
 const backgroundMusic = new Audio('audio/musica_aliens1.mp3');
@@ -59,6 +62,8 @@ function reset() {
     alienSpeed = 0.8;
     score = 0;
     gameOver = false;
+    spaceHeld = false;
+    lastShotTime = 0;
     setupAliens();
 }
 
@@ -193,13 +198,27 @@ function gameLoop(timestamp) {
 
 window.addEventListener('keydown', event => {
     keys[event.key] = true;
-    if (event.key === ' ' && !gameOver) {
-        bullets.push({ x: player.x + PLAYER_WIDTH / 2 - 3, y: player.y, width: 6, height: 18 });
+
+    const isSpaceKey = event.code === 'Space' || event.key === ' ' || event.key === 'Spacebar';
+    if (isSpaceKey) {
+        event.preventDefault();
+        const now = performance.now();
+        if (!spaceHeld && !gameOver && now - lastShotTime >= SHOT_COOLDOWN) {
+            bullets.push({ x: player.x + PLAYER_WIDTH / 2 - 3, y: player.y, width: 6, height: 18 });
+            lastShotTime = now;
+            spaceHeld = true;
+        }
     }
+
     if (event.key.toLowerCase() === 'r' && gameOver) reset();
 });
 window.addEventListener('keyup', event => {
     keys[event.key] = false;
+
+    const isSpaceKey = event.code === 'Space' || event.key === ' ' || event.key === 'Spacebar';
+    if (isSpaceKey) {
+        spaceHeld = false;
+    }
 });
 
 reset();
